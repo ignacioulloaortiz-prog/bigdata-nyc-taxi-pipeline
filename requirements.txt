@@ -1,0 +1,9 @@
+pyspark==3.5.3
+pandas>=2.0
+pyarrow>=14
+numpy
+matplotlib
+seaborn
+google-cloud-bigquery>=3.11
+db-dtypes
+pyyaml

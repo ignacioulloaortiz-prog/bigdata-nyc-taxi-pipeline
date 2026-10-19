@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Informe Técnico — Pipeline Big Data NYC Taxi</title>
+<style>
+  @page { size: A4; }
+  :root { --ink:#1f2937; --mute:#6b7280; --line:#e5e7eb; --blue:#1f5f99; --teal:#2a9d8f; --soft:#f3f6fa; }
+  * { box-sizing: border-box; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); font-size: 10.4pt; line-height: 1.5; margin: 0; background:#fff; }
+  h1 { font-size: 22pt; margin: 0 0 6px; color: var(--blue); line-height:1.2 }
+  h2 { font-size: 14.5pt; color: var(--blue); border-bottom: 2px solid var(--blue); padding-bottom: 3px; margin: 22px 0 10px; break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 16px 0 6px; color: #111827; break-after: avoid; }
+  p { margin: 0 0 8px; text-align: justify; }
+  ul, ol { margin: 0 0 8px; padding-left: 20px; } li { margin-bottom: 2px; }
+  table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 9.2pt; break-inside: avoid; }
+  th { background: var(--blue); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+  td { border-bottom: 1px solid var(--line); padding: 4px 7px; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  figure { margin: 8px 0 14px; text-align: center; break-inside: avoid; }
+  figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+  figcaption { font-size: 8.8pt; color: var(--mute); margin-top: 4px; }
+  code { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 8.6pt; background: #f3f4f6; padding: 0 3px; border-radius: 3px; }
+  pre { font-family: "DejaVu Sans Mono", Menlo, monospace; font-size: 7.9pt; line-height: 1.4; background: #0f172a; color: #e2e8f0; padding: 9px 11px; border-radius: 5px; white-space: pre-wrap; break-inside: avoid; margin: 6px 0 12px; }
+  pre .c { color: #94a3b8; }
+  .box { background: var(--soft); border-left: 4px solid var(--teal); padding: 8px 12px; margin: 8px 0 12px; break-inside: avoid; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0 14px; }
+  .kpi { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+  .kpi b { display:block; font-size: 15pt; color: var(--blue); }
+  .kpi span { font-size: 8.4pt; color: var(--mute); }
+  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+  .cover .top { border-top: 8px solid var(--blue); padding-top: 18mm; }
+  .cover .sub { font-size: 13pt; color: var(--mute); margin-bottom: 18mm; }
+  .cover table td { font-size: 10.5pt; padding: 6px 8px; } .cover table td:first-child { width: 38%; font-weight: 600; color: #374151 }
+  .repo { font-size: 11pt; background: var(--soft); border: 1px solid #cbd5e1; padding: 10px 12px; border-radius: 6px; }
+  .repo a { color: var(--blue); font-weight: 700; word-break: break-all; }
+  .toc { break-after: page; } .toc ol { font-size: 10.5pt; line-height: 1.9 }
+  .tag { display:inline-block; font-size:8pt; font-weight:700; color:#fff; background:var(--teal); border-radius:3px; padding:0 5px; margin-right:4px }
+  .pb { break-before: page; }
+  .two { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .two figure { margin: 4px 0 8px; }
+  .small { font-size: 8.8pt; color: var(--mute); }
+</style></head>
+<body>
+
+<!-- ======================= PORTADA ======================= -->
+<section class="cover">
+  <div class="top">
+    <div class="small">Ingeniería en Informática · Área Informática · Sede Punta Arenas</div>
+    <h1>Pipeline de Big Data de Alta Disponibilidad en la Nube</h1>
+    <div class="sub">Ingesta, Data Lake, procesamiento distribuido y modelos descriptivos y predictivos sobre 4,67 millones de viajes de taxi de Nueva York (Q1 2021)</div>
+    <table>
+      <tr><td>Asignatura</td><td>Big Data (TI3025)</td></tr>
+      <tr><td>Evaluación</td><td>Evaluación Sumativa 02 (25%) · Unidad de Aprendizaje N°2</td></tr>
+      <tr><td>Criterios evaluados</td><td>2.1.1 · 2.1.2 · 2.1.3 · 2.1.4</td></tr>
+      <tr><td>Docente</td><td>Paulo Simunovic Oyarzún</td></tr>
+      <tr><td>Estudiante</td><td>Ignacio Ulloa (trabajo individual)</td></tr>
+      <tr><td>Fecha</td><td>19 de octubre de 2026</td></tr>
+      <tr><td>Stack (Free Tier)</td><td>Google Colab · Apache Spark 3.5 (PySpark) · Google Drive (Data Lake) · Google BigQuery Sandbox + BigQuery ML</td></tr>
+    </table>
+  </div>
+  <div class="repo">Repositorio de código (GitHub):<br><a href="{{GITHUB_URL}}">{{GITHUB_URL}}</a></div>
+</section>
+
+<section class="toc">
+  <h2>Contenido</h2>
+  <ol>
+    <li>Resumen ejecutivo</li>
+    <li>Problema, objetivos y dataset</li>
+    <li>Arquitectura de alta disponibilidad <span class="small">(criterio 2.1.1)</span></li>
+    <li>Implementación en la nube y gestión de datos <span class="small">(criterio 2.1.2)</span></li>
+    <li>Análisis descriptivo distribuido <span class="small">(criterio 2.1.3)</span></li>
+    <li>Modelo predictivo <span class="small">(criterio 2.1.3)</span></li>
+    <li>Planificación, roles y bitácora <span class="small">(criterio 2.1.4)</span></li>
+    <li>Conclusiones y trabajo futuro</li>
+    <li>Anexo A — Estructura del repositorio y ejecución</li>
+  </ol>
+</section>
+
+<!-- ======================= 1 ======================= -->
+<h2>1. Resumen ejecutivo</h2>
+<p>Se diseñó e implementó un pipeline de Big Data completo en la nube, usando solo niveles gratuitos de Google (Colab, Drive y BigQuery Sandbox). El pipeline ingiere los registros oficiales de viajes de taxi amarillo de Nueva York del primer trimestre de 2021 (<b>4.666.625 viajes</b>, 430 MB sin comprimir). Los organiza en un Data Lake por zonas (<i>raw → bronze → silver → gold</i>) en formato Parquet particionado, los limpia y enriquece con Apache Spark, los carga en un Data Warehouse particionado y clusterizado en BigQuery, y sobre ellos hace un análisis descriptivo distribuido y entrena un modelo predictivo.</p>
+<p>El caso de negocio es estimar el <b>tiempo de viaje (ETA)</b> al momento de pedir el taxi. Se entrenó un modelo <i>Gradient-Boosted Trees</i> con <code>pyspark.ml</code>, con hiperparámetros elegidos por validación cruzada de 3 particiones. Se evaluó sobre <b>todo marzo (1,85 M de viajes que el modelo nunca vio)</b>: <b>R² = 0,812, RMSE = 4,16 min y MAE = 2,47 min</b>. El <b>88,7%</b> de los viajes quedó dentro de ±5 minutos del valor real, y el error es un 57% menor que el de la línea base.</p>
+<div class="kpis">
+  <div class="kpi"><b>4,67 M</b><span>viajes ingeridos (Q1 2021)</span></div>
+  <div class="kpi"><b>5,6×</b><span>consulta más rápida en Parquet particionado que en CSV.gz</span></div>
+  <div class="kpi"><b>R² 0,812</b><span>GBT sobre marzo completo (test temporal)</span></div>
+  <div class="kpi"><b>88,7%</b><span>de los ETA con error ≤ 5 minutos</span></div>
+</div>
+
+<!-- ======================= 2 ======================= -->
+<h2>2. Problema, objetivos y dataset</h2>
+<h3>2.1 Problema de negocio</h3>
+<p>Una plataforma de movilidad necesita mostrar al pasajero, antes de iniciar el viaje, cuánto se demorará. Un ETA poco preciso deteriora la experiencia y la asignación de conductores. El objetivo es predecir la duración del viaje (en minutos) usando solo información disponible al momento de la solicitud: distancia estimada, zonas de origen y destino, hora, día de la semana y tipo de tarifa. De forma complementaria, se busca entender los patrones de demanda (cuándo y dónde se concentran los viajes) para apoyar decisiones de operación.</p>
+<h3>2.2 Objetivos</h3>
+<ol>
+  <li>Diseñar una arquitectura cloud por capas que tolere fallos y escale horizontalmente.</li>
+  <li>Implementar ingesta, almacenamiento eficiente (Parquet + particionado) y ETL distribuido dentro del Free Tier.</li>
+  <li>Hacer un análisis descriptivo con consultas agregadas en el motor distribuido.</li>
+  <li>Entrenar y validar formalmente un modelo predictivo distribuido e interpretarlo para el negocio.</li>
+  <li>Planificar y controlar el proyecto con carta Gantt, Kanban, roles y bitácora.</li>
+</ol>
+<h3>2.3 Dataset</h3>
+<table>
+  <tr><th>Atributo</th><th>Detalle</th></tr>
+  <tr><td>Fuente</td><td>NYC Taxi &amp; Limousine Commission (TLC), <i>Yellow Taxi Trip Records</i>, datos abiertos oficiales. Espejo público: <code>github.com/DataTalksClub/nyc-tlc-data</code> (releases).</td></tr>
+  <tr><td>Periodo</td><td>Enero, febrero y marzo de 2021 (3 archivos CSV.gz) + tabla de 265 zonas de taxi</td></tr>
+  <tr><td>Volumen</td><td class="">4.666.625 registros · 18 columnas · 85,3 MB comprimidos · 429,6 MB sin comprimir</td></tr>
+  <tr><td>Variables clave</td><td>Fechas y horas de subida y bajada, distancia, zonas de origen y destino, pasajeros, tipo de tarifa, medio de pago, tarifa, propina, peajes y total</td></tr>
+  <tr><td>Justificación</td><td>Volumen representativo (millones de filas) que obliga a usar procesamiento distribuido; datos reales y sucios (nulos, valores imposibles), lo que permite aplicar reglas de calidad; descarga directa y sin credenciales, lo que da un pipeline 100% reproducible.</td></tr>
+</table>
+
+<!-- ======================= 3 ======================= -->
+<h2 class="pb">3. Arquitectura de alta disponibilidad (criterio 2.1.1)</h2>
+<h3>3.1 Diagrama conceptual</h3>
+<p>El pipeline se organiza en cuatro capas desacopladas. Cada una lee la salida persistida de la anterior, así que cualquier capa puede volver a ejecutarse sin afectar a las demás.</p>
+<figure><img src="../img/arquitectura_conceptual.png"><figcaption>Figura 1. Capas del pipeline: ingesta, almacenamiento, procesamiento y análisis/ML, con aspectos transversales.</figcaption></figure>
+<h3>3.2 Diagrama técnico</h3>
+<figure><img src="../img/arquitectura_tecnica.png"><figcaption>Figura 2. Servicios concretos, zonas del Data Lake, flujos de datos, Data Warehouse y gobierno.</figcaption></figure>
+
+<h3>3.3 Justificación de las tecnologías</h3>
+<table>
+  <tr><th style="width:18%">Capa</th><th style="width:24%">Tecnología</th><th>Por qué se eligió</th></tr>
+  <tr><td>Ingesta</td><td>Google Colab (VM en GCP) + <code>urllib</code></td><td>Gratis, sin instalación. La descarga corre dentro de la red de Google (ancho de banda alto) y el código es el mismo que se programaría en Cloud Functions o Composer.</td></tr>
+  <tr><td>Data Lake</td><td>Google Drive montado en Colab</td><td>15 GB gratis, almacenamiento de objetos replicado por Google y accesible como sistema de archivos desde Spark. Es el equivalente gratuito de Cloud Storage/S3 en este Free Tier: GCS exige una cuenta de facturación.</td></tr>
+  <tr><td>Formato</td><td>Apache Parquet + Snappy</td><td>Columnar (lee solo las columnas que pide la consulta), divisible (permite paralelizar la lectura), con estadísticas por bloque (<i>predicate pushdown</i>) y esquema embebido.</td></tr>
+  <tr><td>Procesamiento</td><td>Apache Spark 3.5 (PySpark)</td><td>Motor distribuido estándar de la industria. El mismo código corre en Colab (<code>local[*]</code>), Dataproc, Databricks o EMR cambiando solo el <i>master</i>. Incluye SQL distribuido y MLlib.</td></tr>
+  <tr><td>Data Warehouse</td><td>BigQuery Sandbox</td><td>Serverless y gratis sin tarjeta (10 GB de almacenamiento y 1 TB de consultas al mes). Permite particionar, clusterizar y hacer ML en SQL (BigQuery ML).</td></tr>
+  <tr><td>ML</td><td><code>pyspark.ml</code> + BigQuery ML</td><td>Entrena sobre millones de filas sin pasar los datos a pandas; los <i>Pipelines</i> aseguran que el preprocesamiento sea idéntico en entrenamiento y en producción.</td></tr>
+  <tr><td>Gestión</td><td>GitHub + GitHub Projects</td><td>Control de versiones, tablero Kanban integrado con <i>issues</i> y trazabilidad del trabajo.</td></tr>
+</table>
+
+<h3>3.4 Alta disponibilidad, tolerancia a fallos y escalabilidad</h3>
+<table>
+  <tr><th style="width:20%">Mecanismo</th><th style="width:42%">Cómo se implementa en este proyecto</th><th>Qué falla resiste / cómo escala</th></tr>
+  <tr><td><span class="tag">HA</span>Almacenamiento redundante</td><td>Data Lake en Google Drive y Data Warehouse en BigQuery (dataset en multi-región <b>US</b>). Google replica los datos en varias zonas.</td><td>Pérdida de un disco, un servidor o una zona completa. Los datos sobreviven aunque la VM de Colab se reinicie (el cómputo es efímero, el almacenamiento es persistente).</td></tr>
+  <tr><td><span class="tag">HA</span>Separación cómputo / almacenamiento</td><td>Toda la información vive en el lake; la VM de Colab no guarda estado. Si se cae, se abre otra y se vuelve a ejecutar.</td><td>Caída o expiración de la VM (habitual en Colab Free). Recuperación = volver a ejecutar el notebook: tiempo de recuperación de minutos y ninguna pérdida de datos.</td></tr>
+  <tr><td><span class="tag">FT</span>Ingesta idempotente y atómica</td><td>Reintentos con espera exponencial (1, 2, 4 s). Se descarga a un archivo <code>.part</code> y se renombra al terminar; si el archivo ya existe, no se descarga de nuevo.</td><td>Cortes de red transitorios y re-ejecuciones parciales, sin archivos corruptos ni duplicados.</td></tr>
+  <tr><td><span class="tag">FT</span>Zona RAW inmutable</td><td>Los CSV originales nunca se modifican, y bronze, silver y gold se pueden regenerar a partir de ellos.</td><td>Errores lógicos en el ETL: se corrige el código y se reprocesa desde RAW (<i>replay</i>).</td></tr>
+  <tr><td><span class="tag">FT</span>Lineage de Spark</td><td>Cada DataFrame conoce su DAG de transformaciones; las tareas fallidas se reintentan (<code>spark.task.maxFailures</code>).</td><td>Pérdida de un executor o partición: Spark recalcula solo las particiones perdidas.</td></tr>
+  <tr><td><span class="tag">FT</span>Escrituras con sobreescritura dinámica</td><td><code>partitionOverwriteMode=dynamic</code>: re-procesar un mes sobreescribe solo esa partición.</td><td>Reprocesos parciales sin afectar los meses ya correctos.</td></tr>
+  <tr><td><span class="tag">ESC</span>Escalabilidad horizontal</td><td>Datos particionados por <code>year/month</code> en Parquet divisible. Spark asigna una tarea por bloque/partición, y AQE ajusta el paralelismo en la ejecución.</td><td>Más datos implica agregar workers: el mismo código pasa de 2 vCPU en Colab a un clúster Dataproc de <i>N</i> nodos con <code>--master yarn</code>. BigQuery escala automáticamente (serverless).</td></tr>
+  <tr><td><span class="tag">ESC</span>Optimización de consultas</td><td><i>Partition pruning</i> (solo se lee el mes pedido), <i>predicate pushdown</i>, <i>broadcast join</i> de la tabla de zonas, y en BigQuery partición por mes y <i>clustering</i> por fecha y borough.</td><td>Costo y latencia crecen con los datos <i>consultados</i>, no con el total almacenado.</td></tr>
+  <tr><td><span class="tag">HA</span>Versionado de modelo y código</td><td>Modelo guardado en <code>models/gbt_eta_AAAAMMDD</code>; código y configuración en GitHub.</td><td>Un modelo nuevo defectuoso se revierte cargando la versión anterior (<i>rollback</i>).</td></tr>
+</table>
+<div class="box"><b>Evolución a producción (misma arquitectura, sin rediseño):</b> Drive → Cloud Storage con bucket multi-regional y versionado de objetos; Colab → Dataproc Serverless o un clúster Dataproc con varios workers (y <i>preemptible</i> para bajar costos); orquestación diaria con Cloud Composer (Airflow) y alertas; ingesta en <i>streaming</i> con Pub/Sub + Spark Structured Streaming para viajes en tiempo real.</div>
+
+<!-- ======================= 4 ======================= -->
+<h2 class="pb">4. Implementación en la nube y gestión de datos (criterio 2.1.2)</h2>
+<h3>4.1 Despliegue y configuración</h3>
+<ol>
+  <li><b>Proyecto GCP en modo Sandbox</b>: se crea en <code>console.cloud.google.com</code> con la cuenta Google, sin tarjeta, y se habilita la API de BigQuery.</li>
+  <li><b>Secreto</b>: en Colab (<i>Secretos</i>, ícono de llave) se registra <code>GCP_PROJECT_ID</code> con acceso solo para el notebook.</li>
+  <li><b>Notebook</b> <code>notebooks/pipeline_bigdata_nyc_taxi.ipynb</code>: se abre desde GitHub en Colab y se ejecuta con <i>Ejecutar todo</i>. Monta Drive como Data Lake, crea la sesión Spark e instala dependencias fijadas en <code>requirements.txt</code>.</li>
+  <li><b>Configuración de Spark</b> (Free Tier ≈ 12 GB RAM y 2 vCPU):</li>
+</ol>
+<pre>spark = (SparkSession.builder.appName("nyc-taxi-bigdata-pipeline").master("local[*]")
+         .config("spark.driver.memory", "8g")
+         .config("spark.sql.shuffle.partitions", "16")          <span class="c"># ajustado al tamaño del clúster</span>
+         .config("spark.sql.adaptive.enabled", "true")          <span class="c"># AQE: re-optimiza en ejecución</span>
+         .config("spark.sql.parquet.compression.codec", "snappy")
+         .config("spark.sql.sources.partitionOverwriteMode", "dynamic")
+         .getOrCreate())</pre>
+
+<h3>4.2 Gestión de datos: zonas, formato y particionamiento</h3>
+<table>
+  <tr><th>Zona</th><th>Contenido</th><th>Formato / partición</th><th class="n">Filas</th><th class="n">Tamaño</th></tr>
+  <tr><td><b>raw/</b></td><td>Archivos originales, inmutables</td><td>CSV.gz</td><td class="n">4.666.625</td><td class="n">85,3 MB</td></tr>
+  <tr><td><b>bronze/</b></td><td>Esquema tipado explícito + metadatos de ingesta (<code>ingest_ts</code>, <code>source_file</code>)</td><td>Parquet+Snappy · <code>year=/month=</code></td><td class="n">4.666.625</td><td class="n">94,7 MB</td></tr>
+  <tr><td><b>silver/</b></td><td>Datos limpios + zonas + 9 variables derivadas</td><td>Parquet+Snappy · <code>year=/month=</code></td><td class="n">4.469.822</td><td class="n">148,6 MB</td></tr>
+  <tr><td><b>gold/</b></td><td>Agregados de negocio: <code>daily_borough</code>, <code>hourly_profile</code></td><td>Parquet+Snappy</td><td class="n">621</td><td class="n">&lt; 1 MB</td></tr>
+</table>
+<pre>bronze = (spark.read.csv(str(RAW / "yellow_tripdata_*.csv.gz"), header=True, schema=schema)  <span class="c"># sin inferSchema: 1 sola lectura</span>
+          .withColumn("year", F.year("tpep_pickup_datetime"))
+          .withColumn("month", F.month("tpep_pickup_datetime")))
+(bronze.repartition("year", "month")
+       .write.mode("overwrite").partitionBy("year", "month").parquet(str(BRONZE / "yellow_trips")))</pre>
+<p><b>Optimización medida.</b> La misma consulta (tarifa promedio por zona de origen en marzo) tardó <b>2,07 s</b> sobre el CSV.gz y <b>0,37 s</b> sobre el Parquet particionado: <b>5,6 veces más rápida</b>. Parquet ocupa un 78% menos que el CSV sin comprimir (95 MB contra 430 MB). Es algo más grande que el gzip, que comprime más pero no se puede dividir, y por eso obliga a leer cada archivo con una sola tarea. La ganancia viene de: (1) <i>partition pruning</i>, porque el filtro <code>month = 3</code> descarta los directorios de enero y febrero sin abrirlos; (2) lectura columnar, porque solo se leen 2 de 22 columnas; y (3) lectura paralela de los bloques. El plan físico de Spark (<code>explain()</code>) confirma <code>PartitionFilters</code> y <code>PushedFilters</code>.</p>
+
+<h3>4.3 Calidad de datos (capa SILVER)</h3>
+<table>
+  <tr><th>Regla</th><th>Condición válida</th><th class="n">Filas que la incumplen</th></tr>
+  <tr><td>Fecha dentro del periodo</td><td>2021-01-01 ≤ fecha de subida ≤ 2021-03-31</td><td class="n">67</td></tr>
+  <tr><td>Distancia válida</td><td>0,1 ≤ millas ≤ 100</td><td class="n">74.946</td></tr>
+  <tr><td>Tarifa válida</td><td>2,5 ≤ USD ≤ 500 (tarifa mínima de NYC = 2,5)</td><td class="n">25.506</td></tr>
+  <tr><td>Duración válida</td><td>1 ≤ minutos ≤ 180</td><td class="n">76.409</td></tr>
+  <tr><td>Zona conocida</td><td>Origen/destino ≠ 264, 265 ("Unknown")</td><td class="n">93.857</td></tr>
+  <tr><td>Velocidad física</td><td>velocidad media &lt; 80 mph</td><td class="n">(filtro final)</td></tr>
+</table>
+<p>Resultado: <b>4.469.822 viajes válidos</b> (se descartó un 4,22%). Las reglas se cuentan por separado (una fila puede incumplir varias). Variables derivadas: <code>trip_duration_min</code>, <code>pickup_hour</code>, <code>pickup_dow</code>, <code>is_weekend</code>, <code>avg_speed_mph</code>, <code>tip_pct</code>, <code>is_airport</code>, <code>same_borough</code>, más borough, zona y <i>service zone</i> de origen y destino (obtenidas con un <i>broadcast join</i>).</p>
+
+<h3>4.4 Data Warehouse en BigQuery</h3>
+<p>La zona SILVER se carga con <i>load jobs</i> de Parquet (gratuitos) en la tabla <code>nyc_taxi.trips</code>, <b>particionada por rango entero</b> sobre <code>month</code> y <b>clusterizada</b> por <code>pickup_date, pu_borough, do_borough</code>. Se eligió partición por rango y no por fecha porque en el Sandbox las particiones por fecha expiran a los 60 días de su fecha: con datos de 2021 se borrarían al cargarse. Con esta configuración, una consulta sobre marzo solo factura los bytes de esa partición, y el clustering por fecha permite podar bloques dentro de ella, lo que mantiene el uso muy por debajo de 1 TB al mes.</p>
+<pre>job_cfg = bigquery.LoadJobConfig(
+    source_format=bigquery.SourceFormat.PARQUET,
+    range_partitioning=bigquery.RangePartitioning(field="month", range_=bigquery.PartitionRange(start=1, end=13, interval=1)),
+    clustering_fields=["pickup_date", "pu_borough", "do_borough"])
+bq.load_table_from_file(fh, f"{DS}.trips", job_config=job_cfg).result()</pre>
+
+<h3>4.5 Gobierno y permisos</h3>
+<table>
+  <tr><th style="width:26%">Aspecto</th><th>Configuración</th></tr>
+  <tr><td>Identidad y autenticación</td><td><code>google.colab.auth.authenticate_user()</code>: OAuth 2.0 con la cuenta Google, que obtiene credenciales temporales de IAM y no deja claves en el código.</td></tr>
+  <tr><td>Secretos</td><td><code>GCP_PROJECT_ID</code> en <i>Colab Secrets</i> (<code>userdata.get</code>) o como variable de entorno. <code>config.yaml</code> no tiene secretos.</td></tr>
+  <tr><td>Mínimo privilegio (producción)</td><td>Service Account <code>sa-pipeline@&lt;proyecto&gt;.iam.gserviceaccount.com</code> con <code>roles/bigquery.dataEditor</code> solo sobre el dataset <code>nyc_taxi</code> y <code>roles/bigquery.jobUser</code> sobre el proyecto (puede ejecutar consultas y cargas, pero no administrar el proyecto). Analistas: <code>roles/bigquery.dataViewer</code>.</td></tr>
+  <tr><td>Data Lake</td><td>Carpeta <code>bigdata_lake</code> de Drive compartida solo con el equipo (editor) y con el docente (lector).</td></tr>
+  <tr><td>Repositorio</td><td><code>.gitignore</code> excluye <code>*.json</code> de claves, <code>.env</code>, <code>*.pem</code>, datos y <code>lake/</code>: ningún dato ni credencial se versiona.</td></tr>
+</table>
+
+<!-- ======================= 5 ======================= -->
+<h2 class="pb">5. Análisis descriptivo distribuido (criterio 2.1.3)</h2>
+<p>Todas las métricas se calcularon con <b>Spark SQL sobre los 4,47 M de filas</b> (percentiles con <code>PERCENTILE_APPROX</code>, correlación, funciones de ventana). A pandas solo se pasaron los resultados ya agregados para graficar.</p>
+<pre>SELECT COUNT(*) AS viajes, ROUND(AVG(trip_distance),2) AS dist_media_mi,
+       ROUND(PERCENTILE_APPROX(trip_duration_min,0.5),2) AS dur_mediana_min,
+       ROUND(STDDEV(trip_duration_min),2) AS dur_desv_std, ROUND(SUM(total_amount)/1e6,2) AS ingresos_musd,
+       ROUND(CORR(trip_distance, trip_duration_min),3) AS corr_dist_dur
+FROM trips</pre>
+<table>
+  <tr><th>Métrica</th><th class="n">Valor</th><th>Métrica</th><th class="n">Valor</th></tr>
+  <tr><td>Viajes válidos</td><td class="n">4.469.822</td><td>Ingresos totales</td><td class="n">USD 77,81 M</td></tr>
+  <tr><td>Distancia media / mediana</td><td class="n">2,82 / 1,71 mi</td><td>Tarifa media</td><td class="n">USD 11,85</td></tr>
+  <tr><td>Duración media / mediana</td><td class="n">12,08 / 9,57 min</td><td>Velocidad media</td><td class="n">12,8 mph</td></tr>
+  <tr><td>Desviación estándar de duración</td><td class="n">9,37 min</td><td>Correlación distancia–duración</td><td class="n">0,809</td></tr>
+</table>
+
+<div class="two">
+<div>
+<h3>Por mes</h3>
+<table>
+  <tr><th>Mes</th><th class="n">Viajes</th><th class="n">Ingresos (M USD)</th><th class="n">Dur. media</th><th class="n">Propina</th></tr>
+  <tr><td>Enero</td><td class="n">1.310.738</td><td class="n">22,66</td><td class="n">11,53</td><td class="n">19,70%</td></tr>
+  <tr><td>Febrero</td><td class="n">1.311.226</td><td class="n">22,78</td><td class="n">12,35</td><td class="n">19,71%</td></tr>
+  <tr><td>Marzo</td><td class="n">1.847.858</td><td class="n">32,37</td><td class="n">12,29</td><td class="n">19,80%</td></tr>
+</table>
+</div>
+<div>
+<h3>Por borough de origen</h3>
+<table>
+  <tr><th>Borough</th><th class="n">% viajes</th><th class="n">Dist. media</th><th class="n">Tarifa media</th></tr>
+  <tr><td>Manhattan</td><td class="n">92,59%</td><td class="n">2,28</td><td class="n">10,28</td></tr>
+  <tr><td>Queens</td><td class="n">4,63%</td><td class="n">11,01</td><td class="n">33,90</td></tr>
+  <tr><td>Brooklyn</td><td class="n">1,85%</td><td class="n">6,74</td><td class="n">26,60</td></tr>
+  <tr><td>Bronx</td><td class="n">0,91%</td><td class="n">7,26</td><td class="n">27,60</td></tr>
+  <tr><td>Staten Island</td><td class="n">0,02%</td><td class="n">27,03</td><td class="n">75,25</td></tr>
+</table>
+</div>
+</div>
+
+<figure><img src="../../results/figures/01_viajes_diarios.png"><figcaption>Figura 3. Viajes diarios. Se ven la estacionalidad semanal, la caída por la tormenta de nieve del 1 de febrero y la tendencia de recuperación en marzo.</figcaption></figure>
+<figure><img src="../../results/figures/02_heatmap_demanda.png"><figcaption>Figura 4. Demanda por día y hora: el máximo está entre las 14:00 y las 18:00 de martes a viernes; los fines de semana la demanda se desplaza a la noche.</figcaption></figure>
+<div class="two">
+  <figure><img src="../../results/figures/03_velocidad_hora.png"><figcaption>Figura 5. Velocidad media por hora: la congestión baja la velocidad en la tarde.</figcaption></figure>
+  <figure><img src="../../results/figures/04_hist_duracion.png"><figcaption>Figura 6. Distribución de la duración: asimetría a la derecha (la mediana es menor que la media).</figcaption></figure>
+</div>
+<figure style="max-width:62%;margin-left:auto;margin-right:auto"><img src="../../results/figures/05_dist_vs_dur.png"><figcaption>Figura 7. Distancia vs duración (muestra del 0,5%): relación fuerte (r = 0,81) pero con dispersión, que depende de la hora y la zona.</figcaption></figure>
+
+<h3>Hallazgos descriptivos para el negocio</h3>
+<ul>
+  <li><b>Concentración geográfica:</b> el 92,6% de los viajes parte en Manhattan, con trayectos cortos (2,3 mi). Las 10 rutas más frecuentes son dentro del Upper East/West Side, de 5 a 8 minutos.</li>
+  <li><b>Viajes de aeropuerto (Queens):</b> son solo el 4,6% de los viajes, pero tienen una tarifa media 3,3 veces mayor, lo que los hace un segmento muy rentable.</li>
+  <li><b>Medio de pago:</b> el 70% paga con tarjeta, con una propina media del 27,3%. La propina en efectivo no queda registrada (0%), algo que hay que considerar en cualquier análisis de propinas.</li>
+  <li><b>Recuperación de la demanda:</b> marzo tiene un 41% más de viajes que febrero (+27% en promedio diario, ya que marzo tiene 31 días); la flota debería ajustarse a esa tendencia.</li>
+  <li><b>Congestión:</b> la velocidad cae en las tardes de días laborales, así que la misma distancia toma más tiempo según la hora. Por eso el ETA no puede depender solo de la distancia, y esto motiva el modelo predictivo.</li>
+</ul>
+
+<!-- ======================= 6 ======================= -->
+<h2 class="pb">6. Modelo predictivo: ETA del viaje (criterio 2.1.3)</h2>
+<h3>6.1 Diseño experimental</h3>
+<table>
+  <tr><th style="width:26%">Elemento</th><th>Decisión</th></tr>
+  <tr><td>Tipo de problema</td><td>Regresión: <code>trip_duration_min</code></td></tr>
+  <tr><td>Variables (12)</td><td>Numéricas: distancia, pasajeros, hora, día de la semana, fin de semana, aeropuerto, mismo borough. Categóricas: tipo de tarifa, borough de origen y destino, zona de origen y destino (≈260 niveles cada una).</td></tr>
+  <tr><td>Validación temporal</td><td>Entrenamiento con <b>enero–febrero</b> (muestra aleatoria del 25%, 655.743 filas, por el límite de RAM del Free Tier) y prueba con <b>marzo completo (1.847.858 filas)</b>, nunca visto por el modelo. Esto imita producción, donde se predice el futuro con datos del pasado, y evita la fuga de información de un <i>split</i> aleatorio.</td></tr>
+  <tr><td>Ajuste de hiperparámetros</td><td><code>CrossValidator</code> 3-fold sobre una grilla de <code>maxDepth</code> ∈ {4, 6} × <code>maxIter</code> ∈ {20, 40} (12 entrenamientos, en paralelo)</td></tr>
+  <tr><td>Métricas</td><td>RMSE (penaliza errores grandes), MAE (error típico en minutos), R² (varianza explicada), % de viajes con error ≤ 5 min</td></tr>
+</table>
+<h3>6.2 Preprocesamiento distribuido (Pipeline de <code>pyspark.ml</code>)</h3>
+<pre>imputer   = Imputer(inputCols=["passenger_count_d"], outputCols=["passenger_imp"], strategy="median")  <span class="c"># nulos</span>
+indexers  = [StringIndexer(inputCol=c, outputCol=c+"_idx", handleInvalid="keep") for c in cats]          <span class="c"># texto→índice</span>
+ohe       = OneHotEncoder(inputCols=[c+"_idx" for c in cats], outputCols=[c+"_ohe" for c in cats], handleInvalid="keep")
+assembler = VectorAssembler(inputCols=num + [c+"_ohe" for c in cats], outputCol="features")
+gbt       = GBTRegressor(labelCol="trip_duration_min", maxBins=64, subsamplingRate=0.8, seed=42)
+grid = ParamGridBuilder().addGrid(gbt.maxDepth, [4, 6]).addGrid(gbt.maxIter, [20, 40]).build()
+cv   = CrossValidator(estimator=gbt, estimatorParamMaps=grid, evaluator=RegressionEvaluator(metricName="rmse"),
+                      numFolds=3, parallelism=2, seed=42)
+model = Pipeline(stages=[imputer, *indexers, ohe, assembler, gbt_best]).fit(train)</pre>
+<p><code>handleInvalid="keep"</code> hace que el modelo tolere zonas o tarifas que no aparecieron en el entrenamiento (las agrupa en una categoría "desconocida"), lo que lo vuelve robusto en producción. Como todo el preprocesamiento está dentro del <code>Pipeline</code>, se guarda junto al modelo y se aplica igual al predecir.</p>
+
+<h3>6.3 Resultados</h3>
+<div class="two">
+<div>
+<table>
+  <tr><th>Validación cruzada 3-fold</th><th class="n">RMSE CV</th></tr>
+  <tr><td>maxDepth 4 · maxIter 20</td><td class="n">4,400</td></tr>
+  <tr><td>maxDepth 4 · maxIter 40</td><td class="n">4,347</td></tr>
+  <tr><td>maxDepth 6 · maxIter 20</td><td class="n">4,369</td></tr>
+  <tr><td><b>maxDepth 6 · maxIter 40</b> (elegido)</td><td class="n"><b>4,332</b></td></tr>
+</table>
+</div>
+<div>
+<table>
+  <tr><th>Modelo (test = marzo)</th><th class="n">RMSE</th><th class="n">MAE</th><th class="n">R²</th></tr>
+  <tr><td>Línea base (media)</td><td class="n">9,588</td><td class="n">6,553</td><td class="n">0,000</td></tr>
+  <tr><td>Regresión lineal</td><td class="n">4,998</td><td class="n">3,238</td><td class="n">0,728</td></tr>
+  <tr><td><b>GBT (CV)</b></td><td class="n"><b>4,157</b></td><td class="n"><b>2,465</b></td><td class="n"><b>0,812</b></td></tr>
+  <tr><td class="small">GBT sobre train</td><td class="n small">4,102</td><td class="n small">2,486</td><td class="n small">0,802</td></tr>
+</table>
+</div>
+</div>
+<p><b>Validación formal:</b> el GBT reduce el RMSE un <b>56,6%</b> frente a la línea base y un <b>16,8%</b> frente a la regresión lineal. Las métricas de entrenamiento (RMSE 4,10) y de prueba (4,16) son casi iguales, así que <b>no hay sobreajuste</b> y el modelo generaliza a un mes que no vio, aunque marzo tuvo un 41% más de demanda. El RMSE de prueba también es coherente con el de la validación cruzada (4,33).</p>
+<figure style="max-width:66%;margin-left:auto;margin-right:auto"><img src="../../results/figures/06_importancia_variables.png"><figcaption>Figura 8. Importancia de las variables (sumando sus columnas one-hot).</figcaption></figure>
+<figure><img src="../../results/figures/07_real_vs_pred.png"><figcaption>Figura 9. Real vs predicho (izquierda) y MAE por hora de inicio (derecha), sobre marzo.</figcaption></figure>
+
+<h3>6.4 Interpretación para el negocio</h3>
+<ul>
+  <li><b>Precisión operativa:</b> el ETA tiene un error típico de <b>2,5 minutos</b>, y el <b>88,7%</b> de los viajes de marzo quedó dentro de ±5 minutos. Es suficiente para mostrarlo al pasajero como un rango ("llegas en 10–13 min").</li>
+  <li><b>Qué determina la duración:</b> la distancia explica el 63% de la importancia, pero la <b>hora del día (14%)</b> y las <b>zonas de origen y destino (10%)</b> son el aporte que una fórmula basada solo en la distancia no captura: congestión y geografía.</li>
+  <li><b>Dónde falla:</b> el error es mayor de 15:00 a 17:00 (MAE ≈ 2,9 min, hora punta) y menor en la noche (≈ 2,1 min). Se recomienda mostrar un rango más amplio en hora punta y agregar variables de tráfico o clima en tiempo real.</li>
+  <li><b>Viajes largos:</b> el modelo tiende a subestimar los viajes de más de 45 minutos (pocos casos, mucha variabilidad por peajes y tráfico). Son candidatos a un modelo específico para aeropuertos.</li>
+</ul>
+
+<h3>6.5 Modelo complementario en BigQuery ML</h3>
+<p>Para usar el Data Warehouse como motor de ML, se entrena directamente en SQL una regresión logística que predice si un pasajero con tarjeta dejará una <b>propina ≥ 20%</b>. Se entrena con enero y se evalúa con febrero (split temporal personalizado) y con clases balanceadas. <code>ML.EVALUATE</code> entrega <i>accuracy</i>, <i>precision</i>, <i>recall</i>, F1 y ROC-AUC (ver la salida en el notebook ejecutado en Colab).</p>
+<pre>CREATE OR REPLACE MODEL `nyc_taxi.tip_model`
+OPTIONS(model_type='logistic_reg', input_label_cols=['good_tip'],
+        data_split_method='CUSTOM', data_split_col='is_eval', auto_class_weights=TRUE) AS
+SELECT IF(tip_pct >= 0.2, 1, 0) AS good_tip, trip_distance, pickup_hour, pickup_dow, is_airport,
+       pu_borough, do_borough, CAST(passenger_count AS STRING) AS passengers, month = 2 AS is_eval
+FROM `nyc_taxi.trips` WHERE payment_type = 1 AND month IN (1, 2);
+SELECT * FROM ML.EVALUATE(MODEL `nyc_taxi.tip_model`);</pre>
+
+<!-- ======================= 7 ======================= -->
+<h2 class="pb">7. Planificación, roles y bitácora (criterio 2.1.4)</h2>
+<h3>7.1 Roles y responsabilidades</h3>
+<p>El trabajo es individual. Para planificar y controlar el avance como en un equipo, las responsabilidades se separaron en cuatro roles, cada uno con sus entregables y tareas en el tablero:</p>
+<table>
+  <tr><th>Rol</th><th>Responsable</th><th>Responsabilidades</th><th>Tareas</th></tr>
+  <tr><td>Líder de proyecto</td><td>Ignacio Ulloa</td><td>Análisis de la pauta, plan, control de hitos, informe y entrega</td><td>T01, T13, T14, T16</td></tr>
+  <tr><td>Arquitecto cloud</td><td>Ignacio Ulloa</td><td>Stack Free Tier, diagramas, alta disponibilidad, BigQuery, IAM</td><td>T02, T08, T11, T15</td></tr>
+  <tr><td>Ingeniero de datos</td><td>Ignacio Ulloa</td><td>Ingesta, Data Lake, ETL PySpark, calidad de datos, scripts</td><td>T03–T07, T12</td></tr>
+  <tr><td>Científico de datos</td><td>Ignacio Ulloa</td><td>EDA distribuido, modelo, validación e interpretación</td><td>T09, T10</td></tr>
+</table>
+<h3>7.2 Carta Gantt</h3>
+<figure><img src="../img/gantt.png"><figcaption>Figura 10. Carta Gantt con tareas, roles (color) e hitos H1–H4 (rombos). Las barras rayadas son tareas pendientes al cierre del informe. Fuente: <code>docs/plan.csv</code>.</figcaption></figure>
+<h3>7.3 Tablero Kanban</h3>
+<figure><img src="../img/kanban.png" style="max-width:88%"><figcaption>Figura 11. Tablero Kanban al cierre del informe. En el repositorio, <code>docs/crear_kanban_github.sh</code> crea el mismo tablero en GitHub Projects (un <i>issue</i> por tarea).</figcaption></figure>
+<h3>7.4 Control de hitos</h3>
+<table>
+  <tr><th>Hito</th><th>Criterio de logro</th><th>Evidencia</th><th>Estado</th></tr>
+  <tr><td>H1 Alcance definido</td><td>Stack, dataset y problema elegidos</td><td>Secciones 2 y 3.3</td><td>Logrado</td></tr>
+  <tr><td>H2 Data Lake operativo</td><td>raw/bronze/silver/gold en Parquet particionado</td><td>Sección 4.2</td><td>Logrado</td></tr>
+  <tr><td>H3 Modelo validado</td><td>GBT con CV y test temporal; R² &gt; 0,75</td><td>Sección 6.3 (R² = 0,812)</td><td>Logrado</td></tr>
+  <tr><td>H4 Entrega</td><td>Informe PDF + repositorio publicados</td><td>Este documento + enlace en la portada</td><td>En curso al cierre del informe</td></tr>
+</table>
+<h3>7.5 Bitácora de incidencias y bloqueos superados</h3>
+<table>
+  <tr><th>#</th><th style="width:30%">Incidencia</th><th style="width:16%">Impacto</th><th>Solución aplicada</th></tr>
+  <tr><td>I-01</td><td>El CDN oficial de NYC TLC respondió <b>403</b> desde el entorno de ejecución</td><td>Bloqueaba la ingesta</td><td>Se usó el espejo público en GitHub Releases (mismos datos oficiales); la URL queda parametrizada en <code>config.yaml</code>.</td></tr>
+  <tr><td>I-02</td><td>Falló la compilación de la <i>wheel</i> de <code>pyspark</code> con el setuptools del sistema</td><td>Sin sesión Spark</td><td>Entorno virtual con pip, setuptools y wheel actualizados; versión fijada en <code>requirements.txt</code>.</td></tr>
+  <tr><td>I-03</td><td><code>VectorAssembler</code>: <i>"Encountered null while assembling a row"</i></td><td>El entrenamiento se detenía</td><td><code>is_airport</code> y <code>same_borough</code> quedaban NULL en zonas sin borough. Se corrigió con <code>coalesce(…, 0)</code> en SILVER, y se usa <code>Imputer</code> para <code>passenger_count</code>.</td></tr>
+  <tr><td>I-04</td><td>Recursos limitados del Free Tier (≈12 GB y 2 vCPU)</td><td>Riesgo de quedarse sin memoria con GBT + CV</td><td>Entrenamiento sobre una muestra del 25%, CV sobre una sub-muestra y prueba sobre marzo completo; <code>cache()</code> selectivo.</td></tr>
+  <tr><td>I-05</td><td>Lectura de CSV.gz lenta (no se puede dividir: 1 tarea por archivo)</td><td>ETL sin paralelismo</td><td>Conversión inmediata a Parquet particionado en BRONZE: la consulta es 5,6 veces más rápida.</td></tr>
+  <tr><td>I-07</td><td>En BigQuery Sandbox las tablas y particiones por fecha expiran a los 60 días</td><td>Las particiones de 2021 se habrían borrado al cargarse</td><td>Partición por rango entero sobre <code>month</code> + clustering por fecha; timestamps en Parquet como <code>TIMESTAMP_MICROS</code> para que BigQuery los cargue sin problemas.</td></tr>
+  <tr><td>I-06</td><td>Datos sucios (distancias 0, tarifas negativas, duraciones imposibles)</td><td>Sesgaba el EDA y el modelo</td><td>5 reglas de calidad cuantificadas más un filtro de velocidad física.</td></tr>
+</table>
+
+<!-- ======================= 8 ======================= -->
+<h2>8. Conclusiones y trabajo futuro</h2>
+<p>Se construyó un pipeline de Big Data completo en la nube, usando solo niveles gratuitos, que cumple los cuatro criterios de la evaluación. La arquitectura separa cómputo y almacenamiento, se apoya en almacenamiento replicado por el proveedor y en procesos idempotentes, y escala horizontalmente sin cambiar el código. El uso de Parquet particionado aceleró las consultas 5,6 veces. El análisis descriptivo distribuido mostró una fuerte concentración en Manhattan, picos de demanda en las tardes de días laborales y una recuperación de la demanda en marzo (+27% de viajes diarios frente a febrero). El modelo GBT, validado con validación cruzada y con un mes completo nunca visto, predice el ETA con R² = 0,81 y un error típico de 2,5 minutos, sin sobreajuste.</p>
+<p><b>Trabajo futuro:</b> (1) ingesta en <i>streaming</i> con Pub/Sub y Spark Structured Streaming; (2) orquestación diaria con Airflow o Cloud Composer y monitoreo de la deriva del modelo; (3) variables de clima y tráfico; (4) servir el modelo como API (Cloud Run) que consulte el modelo versionado del lake; (5) migrar de Drive a Cloud Storage y de Colab a Dataproc Serverless cuando se disponga de facturación.</p>
+
+<!-- ======================= ANEXO ======================= -->
+<h2>Anexo A — Estructura del repositorio y ejecución</h2>
+<pre>bigdata-nyc-taxi-pipeline/
+├── README.md                         <span class="c"># descripción, arquitectura y cómo ejecutar</span>
+├── requirements.txt                  <span class="c"># dependencias con versión fijada</span>
+├── config/config.yaml                <span class="c"># parámetros del pipeline (sin secretos)</span>
+├── notebooks/
+│   ├── pipeline_bigdata_nyc_taxi.ipynb   <span class="c"># pipeline completo, ejecutable en Colab</span>
+│   └── pipeline_source.py                <span class="c"># fuente del notebook (celdas # %%)</span>
+├── src/
+│   ├── common.py                     <span class="c"># rutas del Data Lake + sesión Spark</span>
+│   ├── 01_ingesta.py                 <span class="c"># RAW</span>
+│   ├── 02_etl.py                     <span class="c"># BRONZE → SILVER → GOLD</span>
+│   ├── 03_eda.py                     <span class="c"># Spark SQL descriptivo</span>
+│   ├── 04_modelo_ml.py               <span class="c"># Pipeline pyspark.ml + CV</span>
+│   └── 05_bigquery.py                <span class="c"># carga al DW + BigQuery ML</span>
+├── results/metrics.json · results/figures/*.png
+└── docs/ (diagramas, plan.csv, Gantt, Kanban, bitácora, informe)</pre>
+<p><b>Ejecución:</b> abrir el notebook en Colab (<i>Archivo → Abrir cuaderno → GitHub</i>), registrar <code>GCP_PROJECT_ID</code> en <i>Secretos</i> y elegir <i>Entorno de ejecución → Ejecutar todo</i> (≈ 15 min). Alternativa por scripts: <code>pip install -r requirements.txt</code> y luego <code>python src/01_ingesta.py</code> … <code>python src/05_bigquery.py</code>.</p>
+<p class="small">Las métricas de este informe provienen de la ejecución completa del pipeline (Spark 3.5.3, semilla 42). Al volver a ejecutarlo en otra VM pueden variar levemente (en la tercera cifra decimal), porque el muestreo depende de cómo se particionan los datos.</p>
+
+</body></html>

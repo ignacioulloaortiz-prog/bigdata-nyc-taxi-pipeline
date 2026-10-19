@@ -1,0 +1,375 @@
+{
+  "raw_csv_gz_mb": 85.3,
+  "rows_raw": 4666625,
+  "data_quality": {
+    "fecha_fuera_de_periodo": 67,
+    "distancia_invalida": 74946,
+    "tarifa_invalida": 25506,
+    "duracion_invalida": 76409,
+    "zona_desconocida": 93857
+  },
+  "rows_silver": 4469822,
+  "rows_removed_pct": 4.22,
+  "bronze_parquet_mb": 94.7,
+  "silver_parquet_mb": 148.6,
+  "query_csv_s": 2.07,
+  "query_parquet_s": 0.37,
+  "descriptive": {
+    "viajes": 4469822.0,
+    "dist_media_mi": 2.82,
+    "dist_mediana_mi": 1.71,
+    "dur_media_min": 12.08,
+    "dur_mediana_min": 9.57,
+    "dur_desv_std": 9.37,
+    "tarifa_media_usd": 11.85,
+    "ingresos_musd": 77.81,
+    "vel_media_mph": 12.82,
+    "corr_dist_dur": 0.809
+  },
+  "monthly": [
+    {
+      "month": 1,
+      "viajes": 1310738,
+      "ingresos_musd": 22.66,
+      "dur_media_min": 11.53,
+      "propina_pct": 19.7
+    },
+    {
+      "month": 2,
+      "viajes": 1311226,
+      "ingresos_musd": 22.78,
+      "dur_media_min": 12.35,
+      "propina_pct": 19.71
+    },
+    {
+      "month": 3,
+      "viajes": 1847858,
+      "ingresos_musd": 32.37,
+      "dur_media_min": 12.29,
+      "propina_pct": 19.8
+    }
+  ],
+  "boroughs": [
+    {
+      "borough": "Manhattan",
+      "viajes": 4138493,
+      "pct_viajes": 92.59,
+      "dist_media": 2.28,
+      "tarifa_media": 10.28
+    },
+    {
+      "borough": "Queens",
+      "viajes": 206850,
+      "pct_viajes": 4.63,
+      "dist_media": 11.01,
+      "tarifa_media": 33.9
+    },
+    {
+      "borough": "Brooklyn",
+      "viajes": 82825,
+      "pct_viajes": 1.85,
+      "dist_media": 6.74,
+      "tarifa_media": 26.6
+    },
+    {
+      "borough": "Bronx",
+      "viajes": 40688,
+      "pct_viajes": 0.91,
+      "dist_media": 7.26,
+      "tarifa_media": 27.6
+    },
+    {
+      "borough": "Staten Island",
+      "viajes": 962,
+      "pct_viajes": 0.02,
+      "dist_media": 27.03,
+      "tarifa_media": 75.25
+    },
+    {
+      "borough": "EWR",
+      "viajes": 4,
+      "pct_viajes": 0.0,
+      "dist_media": 15.67,
+      "tarifa_media": 82.5
+    }
+  ],
+  "top_routes": [
+    {
+      "pu_zone": "Upper East Side South",
+      "do_zone": "Upper East Side North",
+      "viajes": 38521,
+      "dur_media": 6.5
+    },
+    {
+      "pu_zone": "Upper East Side North",
+      "do_zone": "Upper East Side South",
+      "viajes": 33373,
+      "dur_media": 7.1
+    },
+    {
+      "pu_zone": "Upper West Side South",
+      "do_zone": "Upper West Side North",
+      "viajes": 16333,
+      "dur_media": 5.0
+    },
+    {
+      "pu_zone": "Lenox Hill West",
+      "do_zone": "Upper East Side North",
+      "viajes": 15795,
+      "dur_media": 6.5
+    },
+    {
+      "pu_zone": "Upper West Side South",
+      "do_zone": "Lincoln Square East",
+      "viajes": 14421,
+      "dur_media": 5.3
+    },
+    {
+      "pu_zone": "Upper West Side North",
+      "do_zone": "Upper West Side South",
+      "viajes": 13677,
+      "dur_media": 4.9
+    },
+    {
+      "pu_zone": "Yorkville West",
+      "do_zone": "Lenox Hill West",
+      "viajes": 13326,
+      "dur_media": 5.6
+    },
+    {
+      "pu_zone": "Upper East Side North",
+      "do_zone": "Lenox Hill West",
+      "viajes": 13243,
+      "dur_media": 8.2
+    },
+    {
+      "pu_zone": "Lincoln Square East",
+      "do_zone": "Upper West Side South",
+      "viajes": 13022,
+      "dur_media": 5.7
+    },
+    {
+      "pu_zone": "Upper East Side North",
+      "do_zone": "East Harlem South",
+      "viajes": 12926,
+      "dur_media": 5.9
+    }
+  ],
+  "payment": [
+    {
+      "medio_pago": "Tarjeta",
+      "viajes": 3147302,
+      "propina_media_pct": 27.28
+    },
+    {
+      "medio_pago": "Efectivo",
+      "viajes": 1021656,
+      "propina_media_pct": 0.0
+    },
+    {
+      "medio_pago": "Desconocido",
+      "viajes": 278222,
+      "propina_media_pct": 8.55
+    },
+    {
+      "medio_pago": "Sin cargo",
+      "viajes": 16707,
+      "propina_media_pct": 0.01
+    },
+    {
+      "medio_pago": "Disputa",
+      "viajes": 5935,
+      "propina_media_pct": 0.0
+    }
+  ],
+  "ml_rows_train": 655743,
+  "ml_rows_test": 1847858,
+  "model_naive": {
+    "rmse": 9.588,
+    "mae": 6.553,
+    "r2": 0.0
+  },
+  "model_lr": {
+    "rmse": 4.998,
+    "mae": 3.238,
+    "r2": 0.7278,
+    "train_s": 18.8
+  },
+  "cv_results": [
+    {
+      "maxDepth": 4,
+      "maxIter": 20,
+      "cv_rmse": 4.4
+    },
+    {
+      "maxDepth": 4,
+      "maxIter": 40,
+      "cv_rmse": 4.347
+    },
+    {
+      "maxDepth": 6,
+      "maxIter": 20,
+      "cv_rmse": 4.369
+    },
+    {
+      "maxDepth": 6,
+      "maxIter": 40,
+      "cv_rmse": 4.332
+    }
+  ],
+  "cv_best": {
+    "maxDepth": 6,
+    "maxIter": 40,
+    "cv_rmse": 4.332
+  },
+  "cv_s": 251.2,
+  "model_gbt": {
+    "rmse": 4.157,
+    "mae": 2.465,
+    "r2": 0.8118,
+    "train_s": 145.3
+  },
+  "model_gbt_train_metrics": {
+    "rmse": 4.102,
+    "mae": 2.486,
+    "r2": 0.8023
+  },
+  "feature_importance": {
+    "trip_distance": 0.6303,
+    "pickup_hour": 0.1387,
+    "DO": 0.0546,
+    "PU": 0.0456,
+    "pickup_dow": 0.0382,
+    "pu_borough": 0.0252,
+    "do_borough": 0.0187,
+    "is_weekend": 0.0162,
+    "is_airport": 0.0137,
+    "same_borough": 0.0096,
+    "ratecode": 0.0075,
+    "passenger": 0.0017
+  },
+  "mae_by_hour": [
+    {
+      "pickup_hour": 0,
+      "mae": 2.45,
+      "n": 20591
+    },
+    {
+      "pickup_hour": 1,
+      "mae": 2.94,
+      "n": 9876
+    },
+    {
+      "pickup_hour": 2,
+      "mae": 2.435,
+      "n": 5447
+    },
+    {
+      "pickup_hour": 3,
+      "mae": 2.614,
+      "n": 3536
+    },
+    {
+      "pickup_hour": 4,
+      "mae": 2.697,
+      "n": 3448
+    },
+    {
+      "pickup_hour": 5,
+      "mae": 2.577,
+      "n": 9783
+    },
+    {
+      "pickup_hour": 6,
+      "mae": 2.311,
+      "n": 30690
+    },
+    {
+      "pickup_hour": 7,
+      "mae": 2.556,
+      "n": 58472
+    },
+    {
+      "pickup_hour": 8,
+      "mae": 2.548,
+      "n": 88561
+    },
+    {
+      "pickup_hour": 9,
+      "mae": 2.484,
+      "n": 95420
+    },
+    {
+      "pickup_hour": 10,
+      "mae": 2.427,
+      "n": 104005
+    },
+    {
+      "pickup_hour": 11,
+      "mae": 2.374,
+      "n": 113755
+    },
+    {
+      "pickup_hour": 12,
+      "mae": 2.412,
+      "n": 124957
+    },
+    {
+      "pickup_hour": 13,
+      "mae": 2.452,
+      "n": 128363
+    },
+    {
+      "pickup_hour": 14,
+      "mae": 2.606,
+      "n": 139459
+    },
+    {
+      "pickup_hour": 15,
+      "mae": 2.786,
+      "n": 141899
+    },
+    {
+      "pickup_hour": 16,
+      "mae": 2.882,
+      "n": 134292
+    },
+    {
+      "pickup_hour": 17,
+      "mae": 2.647,
+      "n": 140112
+    },
+    {
+      "pickup_hour": 18,
+      "mae": 2.301,
+      "n": 138518
+    },
+    {
+      "pickup_hour": 19,
+      "mae": 2.185,
+      "n": 111694
+    },
+    {
+      "pickup_hour": 20,
+      "mae": 2.094,
+      "n": 79878
+    },
+    {
+      "pickup_hour": 21,
+      "mae": 2.059,
+      "n": 64440
+    },
+    {
+      "pickup_hour": 22,
+      "mae": 2.122,
+      "n": 56505
+    },
+    {
+      "pickup_hour": 23,
+      "mae": 2.225,
+      "n": 44157
+    }
+  ],
+  "pct_within_5min": 88.7,
+  "spark_version": "3.5.3"
+}

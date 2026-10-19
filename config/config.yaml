@@ -1,0 +1,31 @@
+# Configuración del pipeline (sin secretos: las credenciales NUNCA van aquí)
+project:
+  name: nyc-taxi-bigdata-pipeline
+  author: Ignacio Ulloa
+dataset:
+  base_url: https://github.com/DataTalksClub/nyc-tlc-data/releases/download
+  months: ["2021-01", "2021-02", "2021-03"]
+storage:
+  colab_lake: /content/drive/MyDrive/bigdata_lake      # Data Lake en Google Drive
+  local_lake: ./lake
+  format: parquet
+  compression: snappy
+  partition_by: [year, month]
+spark:
+  driver_memory: 8g
+  shuffle_partitions: 16
+  adaptive_enabled: true
+ml:
+  label: trip_duration_min
+  train_months: [1, 2]
+  test_months: [3]
+  train_fraction: 0.25
+  cv_folds: 3
+  seed: 42
+bigquery:
+  project_id_secret: GCP_PROJECT_ID     # leído desde Colab Secrets / variable de entorno
+  dataset: nyc_taxi
+  location: US
+  table: trips
+  partition: integer range on month (1..12)   # sandbox: time partitions expiran a los 60 días
+  clustering: [pickup_date, pu_borough, do_borough]
