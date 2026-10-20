@@ -1,8 +1,8 @@
 # Pipeline Big Data de Alta Disponibilidad — NYC Yellow Taxi (Q1 2021)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/USUARIO/bigdata-nyc-taxi-pipeline/blob/main/notebooks/pipeline_bigdata_nyc_taxi.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ignacioulloaortiz-prog/bigdata-nyc-taxi-pipeline/blob/main/notebooks/pipeline_bigdata_nyc_taxi.ipynb)
 
-**Big Data (TI3025) · Evaluación Sumativa 02** · Autor: **Ignacio Ulloa** · Docente: Paulo Simunovic Oyarzún
+**Big Data (TI3025) · Evaluación Sumativa 02** · Integrantes: **Ignacio Ulloa** y **Monserratt Vargas** · Docente: Paulo Simunovic Oyarzún
 
 Pipeline completo en la nube con herramientas **Free Tier**: ingesta batch → Data Lake por zonas (Parquet particionado)
 → ETL distribuido con PySpark → Data Warehouse en BigQuery → EDA distribuido + modelo predictivo (`pyspark.ml`) + BigQuery ML.
@@ -44,7 +44,7 @@ Pipeline completo en la nube con herramientas **Free Tier**: ingesta batch → D
 │   ├── img/ (arquitectura, gantt, kanban)   diagramas.html   plan.csv   gen_gestion.py
 │   ├── bitacora.md                       # roles, hitos e incidencias
 │   ├── crear_kanban_github.sh            # crea issues + tablero GitHub Projects desde plan.csv
-│   └── informe/ (informe.html, build_pdf.py, IUlloa.pdf)
+│   └── informe/ (informe.html, build_pdf.py, IUlloa_MVargas.pdf)
 ├── requirements.txt
 └── .gitignore                            # excluye datos, lake/ y credenciales
 ```

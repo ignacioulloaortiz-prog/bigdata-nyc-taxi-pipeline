@@ -2,14 +2,14 @@
 
 ## Roles y responsabilidades
 
-Trabajo **individual** (Ignacio Ulloa). Las responsabilidades se separaron en cuatro roles para planificar y controlar el avance como si fuera un equipo:
+Trabajo en **pareja**: Ignacio Ulloa y Monserratt Vargas.
 
-| Rol | Responsabilidades | Fortaleza aprovechada |
+| Rol | Responsable | Responsabilidades |
 |---|---|---|
-| Líder de proyecto | Lectura de la pauta, plan y Kanban, control de hitos, informe y entrega | Organización y redacción |
-| Arquitecto cloud | Elección del stack Free Tier, diagramas, alta disponibilidad, BigQuery, IAM | Conocimiento de servicios cloud |
-| Ingeniero de datos | Ingesta, Data Lake por zonas, ETL PySpark, calidad de datos, scripts | Programación en Python/Spark |
-| Científico de datos | EDA distribuido, modelo predictivo, validación e interpretación | Estadística y ML |
+| Líder de proyecto | Ignacio Ulloa | Pauta, plan y Kanban, control de hitos, repositorio y entrega |
+| Ingeniero de datos | Ignacio Ulloa | Ingesta, Data Lake por zonas, ETL PySpark, calidad de datos, scripts, ejecución en Colab/BigQuery |
+| Arquitecta cloud | Monserratt Vargas | Stack Free Tier, diagramas, alta disponibilidad, BigQuery, IAM |
+| Científica de datos | Monserratt Vargas | EDA distribuido, modelo predictivo, validación, interpretación e informe |
 
 ## Hitos
 
@@ -18,7 +18,7 @@ Trabajo **individual** (Ignacio Ulloa). Las responsabilidades se separaron en cu
 | H1 Alcance definido | Stack, dataset y problema de negocio elegidos | ✅ Logrado |
 | H2 Data Lake operativo | Zonas raw/bronze/silver/gold escritas en Parquet particionado | ✅ Logrado |
 | H3 Modelo validado | GBT con CV 3-fold y prueba temporal sobre marzo | ✅ Logrado |
-| H4 Entrega | Informe PDF + repositorio GitHub publicados | ⏳ En curso |
+| H4 Entrega | Informe PDF + repositorio GitHub publicados | ⏳ En curso (repo publicado y pipeline ejecutado en Colab) |
 
 ## Registro de incidencias y bloqueos
 

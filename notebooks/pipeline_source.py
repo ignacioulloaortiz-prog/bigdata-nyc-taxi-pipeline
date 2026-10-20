@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Pipeline Big Data de Alta Disponibilidad — NYC Yellow Taxi (Q1 2021)
 #
-# **Asignatura:** Big Data (TI3025) · **Evaluación Sumativa 02** · **Autor:** Ignacio Ulloa
+# **Asignatura:** Big Data (TI3025) · **Evaluación Sumativa 02** · **Integrantes:** Ignacio Ulloa · Monserratt Vargas
 #
 # Pipeline completo en la nube con herramientas *Free Tier*:
 #

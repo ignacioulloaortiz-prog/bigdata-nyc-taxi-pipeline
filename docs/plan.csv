@@ -1,17 +1,17 @@
-id,tarea,fase,rol,inicio,fin,estado,hito
-T01,Análisis de la pauta y criterios de evaluación,Planificación,Líder de proyecto,2026-10-19 19:00,2026-10-19 19:05,Hecho,
-T02,Selección de stack Free Tier (Colab + Drive + BigQuery Sandbox),Planificación,Arquitecto cloud,2026-10-19 19:02,2026-10-19 19:06,Hecho,
-T03,Selección de dataset y prueba de acceso (NYC TLC Q1-2021),Planificación,Ingeniero de datos,2026-10-19 19:02,2026-10-19 19:06,Hecho,H1 Alcance definido
-T04,Ingesta batch a zona RAW (reintentos + escritura atómica),Ingesta,Ingeniero de datos,2026-10-19 19:06,2026-10-19 19:10,Hecho,
-T05,ETL BRONZE: esquema explícito + Parquet particionado,Procesamiento,Ingeniero de datos,2026-10-19 19:06,2026-10-19 19:20,Hecho,
-T06,ETL SILVER: reglas de calidad + enriquecimiento,Procesamiento,Ingeniero de datos,2026-10-19 19:10,2026-10-19 19:25,Hecho,
-T07,Zona GOLD: agregados para BI,Procesamiento,Ingeniero de datos,2026-10-19 19:20,2026-10-19 19:25,Hecho,H2 Data Lake operativo
-T08,Diagramas de arquitectura conceptual y técnico,Arquitectura,Arquitecto cloud,2026-10-19 19:07,2026-10-19 19:20,Hecho,
-T09,EDA distribuido con Spark SQL + visualizaciones,Análisis,Científico de datos,2026-10-19 19:20,2026-10-19 19:30,Hecho,
-T10,Modelo ETA: preprocesamiento + GBT + validación cruzada,Modelamiento,Científico de datos,2026-10-19 19:25,2026-10-19 19:45,Hecho,H3 Modelo validado
-T11,Data Warehouse BigQuery + BigQuery ML (código),Modelamiento,Arquitecto cloud,2026-10-19 19:20,2026-10-19 19:40,Hecho,
-T12,Scripts .py modulares + config + README,Repositorio,Ingeniero de datos,2026-10-19 19:20,2026-10-19 19:45,Hecho,
-T13,Informe técnico PDF,Documentación,Líder de proyecto,2026-10-19 19:40,2026-10-19 20:10,Hecho,
-T14,Publicar repositorio GitHub + tablero Projects,Entrega,Líder de proyecto,2026-10-19 20:10,2026-10-19 20:25,Por hacer,
-T15,Ejecución final en Colab + BigQuery y capturas,Entrega,Arquitecto cloud,2026-10-19 20:10,2026-10-19 20:35,Por hacer,
-T16,Revisión final y entrega en ambiente de aprendizaje,Entrega,Líder de proyecto,2026-10-19 20:35,2026-10-19 20:45,Por hacer,H4 Entrega
+id,tarea,fase,rol,responsable,inicio,fin,estado,hito
+T01,Análisis de la pauta y criterios de evaluación,Planificación,Líder de proyecto,Ignacio Ulloa,2026-10-19 19:00,2026-10-19 19:05,Hecho,
+T02,Selección de stack Free Tier (Colab + Drive + BigQuery Sandbox),Planificación,Arquitecta cloud,Monserratt Vargas,2026-10-19 19:02,2026-10-19 19:06,Hecho,
+T03,Selección de dataset y prueba de acceso (NYC TLC Q1-2021),Planificación,Ingeniero de datos,Ignacio Ulloa,2026-10-19 19:02,2026-10-19 19:06,Hecho,H1 Alcance definido
+T04,Ingesta batch a zona RAW (reintentos + escritura atómica),Ingesta,Ingeniero de datos,Ignacio Ulloa,2026-10-19 19:06,2026-10-19 19:10,Hecho,
+T05,ETL BRONZE: esquema explícito + Parquet particionado,Procesamiento,Ingeniero de datos,Ignacio Ulloa,2026-10-19 19:06,2026-10-19 19:20,Hecho,
+T06,ETL SILVER: reglas de calidad + enriquecimiento,Procesamiento,Ingeniero de datos,Ignacio Ulloa,2026-10-19 19:10,2026-10-19 19:25,Hecho,
+T07,Zona GOLD: agregados para BI,Procesamiento,Ingeniero de datos,Ignacio Ulloa,2026-10-19 19:20,2026-10-19 19:25,Hecho,H2 Data Lake operativo
+T08,Diagramas de arquitectura conceptual y técnico,Arquitectura,Arquitecta cloud,Monserratt Vargas,2026-10-19 19:07,2026-10-19 19:20,Hecho,
+T09,EDA distribuido con Spark SQL + visualizaciones,Análisis,Científica de datos,Monserratt Vargas,2026-10-19 19:20,2026-10-19 19:30,Hecho,
+T10,Modelo ETA: preprocesamiento + GBT + validación cruzada,Modelamiento,Científica de datos,Monserratt Vargas,2026-10-19 19:25,2026-10-19 19:45,Hecho,H3 Modelo validado
+T11,Data Warehouse BigQuery + BigQuery ML (código),Modelamiento,Arquitecta cloud,Monserratt Vargas,2026-10-19 19:20,2026-10-19 19:40,Hecho,
+T12,Scripts .py modulares + config + README,Repositorio,Ingeniero de datos,Ignacio Ulloa,2026-10-19 19:20,2026-10-19 19:45,Hecho,
+T13,Informe técnico PDF,Documentación,Científica de datos,Monserratt Vargas,2026-10-19 19:40,2026-10-19 20:10,Hecho,
+T14,Publicar repositorio GitHub,Entrega,Líder de proyecto,Ignacio Ulloa,2026-10-19 20:10,2026-10-19 20:28,Hecho,
+T15,Ejecución en Colab + BigQuery y capturas de evidencia,Entrega,Ingeniero de datos,Ignacio Ulloa,2026-10-19 20:28,2026-10-19 21:05,Hecho,
+T16,Revisión final y entrega en ambiente de aprendizaje,Entrega,Líder de proyecto,Ignacio Ulloa,2026-10-19 23:20,2026-10-19 23:45,En progreso,H4 Entrega

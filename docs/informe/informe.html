@@ -53,7 +53,7 @@
       <tr><td>Evaluación</td><td>Evaluación Sumativa 02 (25%) · Unidad de Aprendizaje N°2</td></tr>
       <tr><td>Criterios evaluados</td><td>2.1.1 · 2.1.2 · 2.1.3 · 2.1.4</td></tr>
       <tr><td>Docente</td><td>Paulo Simunovic Oyarzún</td></tr>
-      <tr><td>Estudiante</td><td>Ignacio Ulloa (trabajo individual)</td></tr>
+      <tr><td>Integrantes</td><td>Ignacio Ulloa · Monserratt Vargas (trabajo en pareja)</td></tr>
       <tr><td>Fecha</td><td>19 de octubre de 2026</td></tr>
       <tr><td>Stack (Free Tier)</td><td>Google Colab · Apache Spark 3.5 (PySpark) · Google Drive (Data Lake) · Google BigQuery Sandbox + BigQuery ML</td></tr>
     </table>
@@ -67,7 +67,7 @@
     <li>Resumen ejecutivo</li>
     <li>Problema, objetivos y dataset</li>
     <li>Arquitectura de alta disponibilidad <span class="small">(criterio 2.1.1)</span></li>
-    <li>Implementación en la nube y gestión de datos <span class="small">(criterio 2.1.2)</span></li>
+    <li>Implementación en la nube, gestión de datos y evidencias de despliegue <span class="small">(criterio 2.1.2)</span></li>
     <li>Análisis descriptivo distribuido <span class="small">(criterio 2.1.3)</span></li>
     <li>Modelo predictivo <span class="small">(criterio 2.1.3)</span></li>
     <li>Planificación, roles y bitácora <span class="small">(criterio 2.1.4)</span></li>
@@ -206,6 +206,20 @@ bq.load_table_from_file(fh, f"{DS}.trips", job_config=job_cfg).result()</pre>
   <tr><td>Repositorio</td><td><code>.gitignore</code> excluye <code>*.json</code> de claves, <code>.env</code>, <code>*.pem</code>, datos y <code>lake/</code>: ningún dato ni credencial se versiona.</td></tr>
 </table>
 
+
+<h3 class="pb">4.6 Evidencias del despliegue en la nube</h3>
+<p>Capturas de la ejecución real del pipeline en Google Colab y Google Cloud (proyecto <code>colab-512123</code>, BigQuery en modo Sandbox), el 19-10-2026.</p>
+<div class="two">
+  <figure><img src="../img/evidencia/01_colab_notebook_github.png"><figcaption>Figura E1. Notebook abierto en Google Colab directamente desde el repositorio de GitHub.</figcaption></figure>
+  <figure><img src="../img/evidencia/02_colab_ejecucion.png"><figcaption>Figura E2. Ejecución en la VM de Colab (entorno conectado, RAM y disco activos, celdas ejecutadas ✓).</figcaption></figure>
+</div>
+<figure style="max-width:80%;margin-left:auto;margin-right:auto"><img src="../img/evidencia/03_drive_data_lake.png"><figcaption>Figura E3. Data Lake en Google Drive (<code>Mi unidad/bigdata_lake</code>) con las zonas <code>raw</code>, <code>bronze</code>, <code>silver</code>, <code>gold</code> y los modelos versionados en <code>models</code>.</figcaption></figure>
+<figure><img src="../img/evidencia/04_bigquery_tabla_trips.png"><figcaption>Figura E4. Tabla <code>nyc_taxi.trips</code> en BigQuery: tabla particionada con <b>4.469.822 filas</b> (las mismas de la zona SILVER).</figcaption></figure>
+<div class="two">
+  <figure><img src="../img/evidencia/05_bigquery_modelos.png"><figcaption>Figura E5. Dataset <code>nyc_taxi</code>: modelo <code>tip_model</code> (LOGISTIC_REGRESSION) creado con BigQuery ML.</figcaption></figure>
+  <figure><img src="../img/evidencia/06_bqml_tip_model.png"><figcaption>Figura E6. Detalle del modelo de BigQuery ML: regresión logística en la región US, con datos de entrenamiento y evaluación separados.</figcaption></figure>
+</div>
+
 <!-- ======================= 5 ======================= -->
 <h2 class="pb">5. Análisis descriptivo distribuido (criterio 2.1.3)</h2>
 <p>Todas las métricas se calcularon con <b>Spark SQL sobre los 4,47 M de filas</b> (percentiles con <code>PERCENTILE_APPROX</code>, correlación, funciones de ventana). A pandas solo se pasaron los resultados ya agregados para graficar.</p>
@@ -331,25 +345,25 @@ SELECT * FROM ML.EVALUATE(MODEL `nyc_taxi.tip_model`);</pre>
 <!-- ======================= 7 ======================= -->
 <h2 class="pb">7. Planificación, roles y bitácora (criterio 2.1.4)</h2>
 <h3>7.1 Roles y responsabilidades</h3>
-<p>El trabajo es individual. Para planificar y controlar el avance como en un equipo, las responsabilidades se separaron en cuatro roles, cada uno con sus entregables y tareas en el tablero:</p>
+<p>El trabajo se hizo en pareja. Las responsabilidades se dividieron en cuatro roles según las fortalezas de cada integrante, y cada tarea del tablero tiene un responsable: Ignacio se encargó de la gestión del proyecto y de la ingeniería de datos (ingesta, Data Lake, ETL, repositorio y ejecución en la nube); Monserratt, de la arquitectura cloud y de la ciencia de datos (diseño, BigQuery, EDA, modelo e informe).</p>
 <table>
   <tr><th>Rol</th><th>Responsable</th><th>Responsabilidades</th><th>Tareas</th></tr>
-  <tr><td>Líder de proyecto</td><td>Ignacio Ulloa</td><td>Análisis de la pauta, plan, control de hitos, informe y entrega</td><td>T01, T13, T14, T16</td></tr>
-  <tr><td>Arquitecto cloud</td><td>Ignacio Ulloa</td><td>Stack Free Tier, diagramas, alta disponibilidad, BigQuery, IAM</td><td>T02, T08, T11, T15</td></tr>
-  <tr><td>Ingeniero de datos</td><td>Ignacio Ulloa</td><td>Ingesta, Data Lake, ETL PySpark, calidad de datos, scripts</td><td>T03–T07, T12</td></tr>
-  <tr><td>Científico de datos</td><td>Ignacio Ulloa</td><td>EDA distribuido, modelo, validación e interpretación</td><td>T09, T10</td></tr>
+  <tr><td>Líder de proyecto</td><td>Ignacio Ulloa</td><td>Análisis de la pauta, plan, control de hitos, publicación del repositorio y entrega</td><td>T01, T14, T16</td></tr>
+  <tr><td>Ingeniero de datos</td><td>Ignacio Ulloa</td><td>Ingesta, Data Lake, ETL PySpark, calidad de datos, scripts, ejecución en Colab y BigQuery</td><td>T03–T07, T12, T15</td></tr>
+  <tr><td>Arquitecta cloud</td><td>Monserratt Vargas</td><td>Stack Free Tier, diagramas, alta disponibilidad, BigQuery, IAM</td><td>T02, T08, T11</td></tr>
+  <tr><td>Científica de datos</td><td>Monserratt Vargas</td><td>EDA distribuido, modelo, validación e interpretación, informe técnico</td><td>T09, T10, T13</td></tr>
 </table>
 <h3>7.2 Carta Gantt</h3>
-<figure><img src="../img/gantt.png"><figcaption>Figura 10. Carta Gantt con tareas, roles (color) e hitos H1–H4 (rombos). Las barras rayadas son tareas pendientes al cierre del informe. Fuente: <code>docs/plan.csv</code>.</figcaption></figure>
+<figure><img src="../img/gantt.png"><figcaption>Figura 10. Carta Gantt con tareas, responsable (color) e hitos H1–H4 (rombos). La barra rayada es la tarea en curso al cierre del informe. Fuente: <code>docs/plan.csv</code>.</figcaption></figure>
 <h3>7.3 Tablero Kanban</h3>
-<figure><img src="../img/kanban.png" style="max-width:88%"><figcaption>Figura 11. Tablero Kanban al cierre del informe. En el repositorio, <code>docs/crear_kanban_github.sh</code> crea el mismo tablero en GitHub Projects (un <i>issue</i> por tarea).</figcaption></figure>
+<figure><img src="../img/kanban.png" style="max-width:88%"><figcaption>Figura 11. Tablero Kanban al cierre del informe. Cada tarjeta indica su responsable y rol. En el repositorio, <code>docs/plan.csv</code> es la fuente del tablero y <code>docs/crear_kanban_github.sh</code> lo replica en GitHub Projects.</figcaption></figure>
 <h3>7.4 Control de hitos</h3>
 <table>
   <tr><th>Hito</th><th>Criterio de logro</th><th>Evidencia</th><th>Estado</th></tr>
   <tr><td>H1 Alcance definido</td><td>Stack, dataset y problema elegidos</td><td>Secciones 2 y 3.3</td><td>Logrado</td></tr>
   <tr><td>H2 Data Lake operativo</td><td>raw/bronze/silver/gold en Parquet particionado</td><td>Sección 4.2</td><td>Logrado</td></tr>
   <tr><td>H3 Modelo validado</td><td>GBT con CV y test temporal; R² &gt; 0,75</td><td>Sección 6.3 (R² = 0,812)</td><td>Logrado</td></tr>
-  <tr><td>H4 Entrega</td><td>Informe PDF + repositorio publicados</td><td>Este documento + enlace en la portada</td><td>En curso al cierre del informe</td></tr>
+  <tr><td>H4 Entrega</td><td>Informe PDF + repositorio publicados</td><td>Este documento + enlace en la portada · Sección 4.6</td><td>En curso al cierre del informe</td></tr>
 </table>
 <h3>7.5 Bitácora de incidencias y bloqueos superados</h3>
 <table>

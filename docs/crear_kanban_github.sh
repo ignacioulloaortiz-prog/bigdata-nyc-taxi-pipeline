@@ -10,8 +10,8 @@ echo "Proyecto #$PROJECT_NUM creado"
 for L in "Planificación" "Ingesta" "Procesamiento" "Arquitectura" "Análisis" "Modelamiento" "Repositorio" "Documentación" "Entrega"; do
   gh label create "$L" -R "$OWNER/$REPO" --force >/dev/null
 done
-tail -n +2 docs/plan.csv | while IFS=, read -r id tarea fase rol inicio fin estado hito; do
-  body="**Rol:** $rol
+tail -n +2 docs/plan.csv | while IFS=, read -r id tarea fase rol responsable inicio fin estado hito; do
+  body="**Responsable:** $responsable · **Rol:** $rol
 **Inicio:** $inicio · **Fin:** $fin
 **Hito:** ${hito:--}"
   url=$(gh issue create -R "$OWNER/$REPO" --title "$id · $tarea" --body "$body" --label "$fase")

@@ -1,7 +1,7 @@
 # Configuración del pipeline (sin secretos: las credenciales NUNCA van aquí)
 project:
   name: nyc-taxi-bigdata-pipeline
-  author: Ignacio Ulloa
+  authors: [Ignacio Ulloa, Monserratt Vargas]
 dataset:
   base_url: https://github.com/DataTalksClub/nyc-tlc-data/releases/download
   months: ["2021-01", "2021-02", "2021-03"]
